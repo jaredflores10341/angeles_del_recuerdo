@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario a AWS Lambda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white p-6 rounded-lg shadow-md w-96">
+        <h2 class="text-xl font-semibold mb-4">Prospecto Ángeles del Recuerdo</h2>
+        <form id="miFormulario">
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre" class="w-full p-2 mb-2 border rounded" required>
+            <input type="text" id="telefono" name="telefono" placeholder="Teléfono" class="w-full p-2 mb-2 border rounded" required>
+            <input type="text" id="fecha" name="fecha" placeholder="Fecha a contactar" class="w-full p-2 mb-2 border rounded" required>
+            <input type="text" id="resumen" name="resumen" placeholder="Datos importantes" class="w-full p-2 mb-2 border rounded" required>
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Enviar</button>
+        </form>
+        <p id="mensaje" class="mt-2 text-center text-sm text-gray-600"></p>
+    </div>
+
+    <script>
+        document.getElementById("miFormulario").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            var datos = {
+                nombre: document.getElementById("nombre").value,
+                telefono: document.getElementById("telefono").value,
+                fecha: document.getElementById("fecha").value,
+                resumen: document.getElementById("resumen").value
+            };
+            
+            var data = JSON.stringify(datos);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://9lp86ajilg.execute-api.us-east-1.amazonaws.com/default/contactar_gayosso", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        document.getElementById("mensaje").innerText = "Datos enviados correctamente";
+                    } else {
+                        document.getElementById("mensaje").innerText = "Error al enviar los datos";
+                    }
+                }
+            };
+            
+            xhr.send(data);
+        });
+    </script>
+</body>
+</html>
+
